@@ -6,7 +6,7 @@
 <script src="{% static "/js/login.js" %}"></script>
 <link rel="stylesheet" href="{% static "css/login.css" %}">
 <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-
+{% csrf_token %}
 <!-- BEGIN # MODAL LOGIN -->
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
      style="display: none;">
