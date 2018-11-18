@@ -1,5 +1,81 @@
-$(function () {
+function loginUser() {
+    var username = $("#login_username").val();
+    var password = $("#login_password").val();
 
+    $.ajax({
+        method: 'POST',
+        url: '../login_user/',
+        data: {
+            'username': username,
+            'password': password
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.status == 1)
+                //window.location = '../reminder/home';
+                //console.log(data);
+                //window.location.href = '../reminder/home';
+                console.log("done");
+            else
+                console.log(data.message);
+        }
+    });
+}
+
+function registerUser() {
+    var username = $("#register_username").val();
+    var first_name = $("#register_first_name").val();
+    var last_name = $("#register_last_name").val();
+    var email = $("#register_email").val();
+    var password = $("#register_password").val();
+    var password_confirm = $("#register_password_confirm").val();
+
+    if(password === password_confirm) {
+        $.ajax({
+            method: 'POST',
+            url: '../create_user/',
+            data: {
+                'username' : username,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password': password
+
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.status == 1)
+                    window.location = '../reminder/home';
+                else
+                    console.log(data.message);
+            }
+        });
+    }else{
+        alert("Password mismatch!");
+    }
+}
+
+function resetPass() {
+     var email = $("#lost_email").val();
+
+    $.ajax({
+        method: 'POST',
+        url: '../reset_password/',
+        data: {
+            'email': email
+
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.status == 1)
+                window.location = '../reminder/home';
+            else
+                console.log(data.message);
+        }
+    });
+}
+
+$(function () {
     var $formLogin = $('#login-form');
     var $formLost = $('#lost-form');
     var $formRegister = $('#register-form');
@@ -7,38 +83,6 @@ $(function () {
     var $modalAnimateTime = 300;
     var $msgAnimateTime = 150;
     var $msgShowTime = 2000;
-
-    $("form").submit(function () {
-        switch (this.id) {
-            case "login-form":
-                loginUser();
-                return false;
-                break;
-            case "lost-form":
-                var $ls_email = $('#lost_email').val();
-                if ($ls_email == "ERROR") {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", "Send error");
-                } else {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", "Send OK");
-                }
-                return false;
-                break;
-            case "register-form":
-                var $rg_username = $('#register_username').val();
-                var $rg_email = $('#register_email').val();
-                var $rg_password = $('#register_password').val();
-                if ($rg_username == "ERROR") {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", "Register error");
-                } else {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "success", "glyphicon-ok", "Register OK");
-                }
-                return false;
-                break;
-            default:
-                return false;
-        }
-        return false;
-    });
 
     $('#login_register_btn').click(function () {
         modalAnimate($formLogin, $formRegister)
@@ -94,29 +138,9 @@ $(function () {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
 
-                xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
+            xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
 
         }
     });
-
-    function loginUser() {
-        var username = $("#login_username").val();
-        var password = $("#login_password").val();
-
-        $.ajax({
-            method: 'POST',
-            url: '../login_user/',
-            data: {
-                'username': username,
-                'password': password
-            },
-            dataType: 'json',
-            success: function (data) {
-                if(data.status == 1)
-                    window.location ='../reminder/home';
-                else
-                    console.log(data.message);
-            }
-        });
-    }
 });
+
